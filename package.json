@@ -1,0 +1,15 @@
+{
+  "name": "sqljsonprimer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:build": "tsc -w",
+    "start:run": "nodemon dist/server.js",
+    "start": "concurrently npm:start:*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

@@ -1,0 +1,6 @@
+# bloat  node modules
+node_modules/
+
+# secret environement vaiables
+.env
+README.md
