@@ -1,2 +1,56 @@
-# Simple Hello world
-POST http://localhost:4000/app
+# add user
+POST http://localhost:4000/app/
+Content-Type: application/json
+
+{
+    "username":"Guts",
+    "profile":{
+        "bodyMass":{
+            "height":204,
+            "weight":115
+        },
+        "age":24,
+        "gender":"male",
+        "weapons":["dragon slayer","bowgun","throwing knives","prosthetic hand","explosives"]
+    },
+    "parameters":{
+        "physicalStrength":100,
+        "emotionalStrength":100,
+        "sociability":50,
+        "intelligence":60,
+        "stamina":90,
+        "legerity":80
+    }
+}
+
+#################
+# get users
+GET http://localhost:4000/app/
+Content-Type: application/json
+
+
+###############
+# update users
+PATCH http://localhost:4000/app/update/254d233f-fca9-4ff0-bf6b-3e606a632885
+Content-Type: application/json
+
+{
+    "username":"Puck",
+    "profile":{
+        "bodyMass":{
+            "height":60,
+            "weight":40
+        },
+        "age":90,
+        "gender":"ale",
+        "weapons":["none","at","the","moment"]
+    },
+    "parameters":{
+        "physicalStrength":10,
+        "emotionalStrength":10,
+        "sociability":100,
+        "intelligence":60000,
+        "stamina":90,
+        "legerity":80
+    }
+}

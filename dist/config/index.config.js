@@ -8,16 +8,16 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 exports.sqlConfig = {
     user: process.env.DB_USER,
-    database: process.env.DB_NAME,
     password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
     server: 'localhost',
-    poll: {
+    pool: {
         max: 10,
         min: 0,
         idleTimeoutMillis: 30000
     },
     options: {
-        encrypt: false,
-        trustServerCertificate: true
+        encrypt: false, //true for Azure connection
+        trustServerCertificate: true //change to false for production
     }
 };

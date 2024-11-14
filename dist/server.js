@@ -32,8 +32,8 @@ const app_routes_1 = __importDefault(require("./api/routes/app.routes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)(); //initilaize the express application
 const port = process.env.PORT; //get port to run on from .env 
-app.use((0, express_1.json)()); //addbody to requests
 // define the application routes
+app.use((0, express_1.json)()); //addbody to requests
 app.use('/app', app_routes_1.default);
 app.listen(port, () => {
     console.log(`[server]:server is running at http://localhost:${port}`);
