@@ -23,6 +23,21 @@ Content-Type: application/json
     }
 }
 
+###############
+# get user by params
+GET http://localhost:4000/app/search
+Content-Type: application/json
+
+{
+    "profile":{
+        "gender":"male"
+    },
+    "parameters":{
+        "physicalStrength":100
+    }
+}
+
+
 #################
 # get users
 GET http://localhost:4000/app/
@@ -54,3 +69,10 @@ Content-Type: application/json
         "legerity":80
     }
 }
+
+
+#############
+# delete user
+DELETE http://localhost:4000/app/delete/254d233f-fca9-4ff0-bf6b-3e606a632885
+
+

@@ -12,11 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUser = exports.getUsers = exports.addUser = void 0;
+exports.deleteUser = exports.updateUser = exports.getUsers = exports.searchUser = exports.addUser = void 0;
 const uuid_1 = require("uuid");
 const mssql_1 = __importDefault(require("mssql"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const index_config_1 = require("../../config/index.config");
+const search_helpers_1 = require("../helpers/search.helpers");
 dotenv_1.default.config();
 function addUser(request, response) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -42,10 +43,39 @@ function addUser(request, response) {
     });
 }
 exports.addUser = addUser;
-// export async function getUser(request:Request, response:Response){
-//     // function gets a specific user
-//     // using specific search params, either {id, username,profile, parameters}
-// }
+function searchUser(request, response) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const { filters, values } = (0, search_helpers_1.buildFilterQuery)(request.body);
+            // Base query
+            let query = "SELECT * FROM sqlJson";
+            if (filters) {
+                query += ` WHERE ${filters} AND isDeleted=0`;
+            }
+            // Establish database connection
+            const pool = yield mssql_1.default.connect(index_config_1.sqlConfig);
+            const sqlRequest = pool.request();
+            // Inject parameters into request
+            Object.keys(values).forEach(key => {
+                sqlRequest.input(key, values[key]);
+            });
+            // Execute query
+            const users = (yield sqlRequest.query(query)).recordset;
+            if (users.length !== 0) {
+                console.log(users);
+                return response.status(200).json(users);
+            }
+            else {
+                return response.status(400).json({ error: 'User with specified parameetrs does not exist' });
+            }
+        }
+        catch (error) {
+            return response.status(500).json({ error: "Server error during search" });
+        }
+    });
+}
+exports.searchUser = searchUser;
+;
 function getUsers(request, response) {
     return __awaiter(this, void 0, void 0, function* () {
         // function gets all users from db
@@ -53,7 +83,6 @@ function getUsers(request, response) {
             const pool = yield mssql_1.default.connect(index_config_1.sqlConfig);
             const users = (yield pool.request()
                 .execute("getSqlJsonUsers ")).recordset;
-            console.log(users);
             return response.status(200).send(users);
         }
         catch (error) {
@@ -96,6 +125,29 @@ function updateUser(request, response) {
     });
 }
 exports.updateUser = updateUser;
-// export async function deleteUser(request:Request, response:Response){
-//     // delete a user with the passed id
-// }
+function deleteUser(request, response) {
+    return __awaiter(this, void 0, void 0, function* () {
+        // delete a user with the passed id
+        const id = request.params.id;
+        try {
+            const pool = yield mssql_1.default.connect(index_config_1.sqlConfig);
+            const user = (yield pool.request()
+                .input('id', id)
+                .execute('getSqlJsonById')).recordset;
+            if (user.length !== 0) {
+                yield pool.request()
+                    .input('id', id)
+                    .execute('sqlJsonDelete');
+                return response.status(200).json({ message: `${user[0].username} has succesfully been deleted` });
+            }
+            else {
+                return response.status(400).json({ error: 'That user does not exist' });
+            }
+        }
+        catch (error) {
+            console.error('Internal server error', error);
+            return response.status(500).json({ error: `Internal seerver error: ${error}` });
+        }
+    });
+}
+exports.deleteUser = deleteUser;

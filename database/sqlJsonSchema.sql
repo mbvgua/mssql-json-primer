@@ -69,7 +69,27 @@ BEGIN
 END;
 GO
 
+-- getByParams
+
+-- deleteUser
+CREATE OR ALTER PROCEDURE sqlJsonDelete (
+    @id VARCHAR(255)
+)
+AS
+BEGIN
+    UPDATE sqlJson
+    SET isDeleted=1
+    WHERE @id=id
+END;
+GO
 
 
 
+-- get all
 SELECT * FROM sqlJson WHERE isDeleted=0;
+GO
+
+-- get from db plainly
+SELECT * FROM sqlJson
+WHERE JSON_VALUE(profileJson,'$.gender') LIKE 'male'
+GO

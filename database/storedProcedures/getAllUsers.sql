@@ -1,0 +1,7 @@
+CREATE OR ALTER PROCEDURE getSqlJsonUsers 
+AS
+BEGIN
+    SELECT * FROM sqlJson
+    WHERE isDeleted=0
+END;
+GO
